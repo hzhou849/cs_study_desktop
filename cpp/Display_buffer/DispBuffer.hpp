@@ -1,24 +1,4 @@
-/* Display GUI 
- *
- *  Two Dimensional array is essentially an array of pointers to arrays, which can be initialized in a loop like:
- *  int **a = new int*[rowcount];
- * 
- * for (int i = 0; i < rowcount; ++i) {
- * 		a[i] = new int[100 * (sizeof(int))]
- * }
- * 
- * a[0] ----> a[0][0]  a[0][1]  a[0][2]
- * a[1] ----> a[1][0]  a[1][1]  a[1][2]
- * a[2] ----> a[2][0]  a[2][1]  a[2][2]
- * 
- * 
- * rember to free heap memory!!!
- * for (int i=0; i < rowcount; ++i) {
- * 		delete [] a[i]; // delete each sub-array 
- * }
- * delete []a; // delete the main array
- * 
- */
+
 class DispBuffer {
 private:
 	int x;
