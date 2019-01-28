@@ -30,6 +30,9 @@
  * 8
  * 9
  * 10
+ * 
+ * 
+ * method 2 - create a contiguous block of memory and mod the value by column count to sepearate printout.
  */
 
 #include <iostream>
@@ -43,9 +46,14 @@ class DispBuffer {
 private:
 	int x;
 	int y;
+	char **a;
+	int col;
+	int row;
+	
+	
 
 public:
-	DispBuffer(); // set somekinda of 2d array in heap memory.
+	DispBuffer(int colCount, int rowCount); // set somekinda of 2d array in heap memory.
 	~DispBuffer();
 
 	void bufferWriteLine(std::string s);		//write to array
@@ -55,7 +63,8 @@ public:
 
 
 	//getters
-	void getCursorPosition();	// get the current cursor position
+	int getCursorX();	// get the current cursor position
+	int getCursorY();	
 	void dumpBuffer();  		// dump the current buffer output.
 	char* pointer(int column, int row); // pass x y and return the ptr value
 	void searchString();			//search for word or char and returns [col][row] all instances that occur   
@@ -63,13 +72,54 @@ public:
 };
 #endif //_DISPBUFFER_H_
 
+DispBuffer::DispBuffer(int colCount, int rowCount): x{0}, y{0}, a{nullptr} {
+	this->row = rowCount;
+	this->col=colCount;
+	// Create the rowCount pointers to an array
+	this->a = new char*[rowCount];
+	// create the arrays being pointed too.
+	for (int i=0; i<rowCount; i++) {
+		this->a[i] = new char[colCount * (sizeof(char))];
+	}
+}
+
+DispBuffer::~DispBuffer(){
+	// delete the arrays
+	for (int i=0; i <row; i++) {
+		delete [] a[i];
+	}
+	
+	// delete the pointers to the array
+	delete [] a;
+}
+
+void DispBuffer::dumpBuffer() {
+	for(int i=0; i <row; i++) {
+		for (int j=0; j<col; j++) {
+			std::cout << a[i][j];
+
+			if (j == (col -1)) {
+				std::cout << std::endl;
+			}	
+		}
+	}
+}
+
+int DispBuffer::getCursorX() {
+	return x;
+}
+
+
+
+
 
 int main() {
 	int rowCount = 100;
 	int columnCount=100;
 	char **a = new char*[rowCount];
 	void *ptr= nullptr;
-	 char const *str = new char[10 +1]; // +1 for null terminator
+	
+	char const *str = new char[10 +1]; // +1 for null terminator
 	str = "ta-dah";
 
 	str = "adfasf";
@@ -92,9 +142,9 @@ int main() {
 		
 		for (int j=0; j < 5; j++){
 			ptr= static_cast<void*>(std::addressof(a[i][j]));
-			std::cout << "a["<<i << "]" << "[" << j<<"]: " << a[i][j]<< " "<< ptr<< " "; // debug statement
+			// std::cout << "a["<<i << "]" << "[" << j<<"]: " << a[i][j]<< " "<< ptr<< " "; // debug statement
 			// std::cout << static_cast<void*>(std::addressof(a[i][j])); // get the address of
-			// std::cout << a[i][j];
+			std::cout << a[i][j];
 			if ( (j==4) ) 
 				std::cout <<std::endl;
 		}
